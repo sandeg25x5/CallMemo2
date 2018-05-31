@@ -27,15 +27,16 @@ public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecycl
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView userName, userPhone, userMemo, userCurrentTime;
+        TextView userName, userPhone, userMemo, userCurrentTime,userOptionView;
         View layOut;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.layOut = itemView;
             userName = layOut.findViewById(R.id.user_name_txt);
-            userPhone = layOut.findViewById(R.id.user_phone_number_text);
+            userPhone = layOut.findViewById(R.id.user_phone_number_txt);
             userMemo = layOut.findViewById(R.id.user_memo_txt);
+            userOptionView=layOut.findViewById(R.id.user_option_view);
             userCurrentTime = layOut.findViewById(R.id.user_current_time_txt);
         }
     }
