@@ -1,12 +1,16 @@
 package com.example.sandeeplamsal123.testapplication2;
 
+import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,14 +21,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sandeeplamsal123.testapplication2.models.ContactModel;
 import com.example.sandeeplamsal123.testapplication2.receivers.PhoneReceiver;
 import com.example.sandeeplamsal123.testapplication2.userdatabases.User;
 import com.example.sandeeplamsal123.testapplication2.userdatabases.UserRepository;
 import com.example.sandeeplamsal123.testapplication2.userdatabases.UserViewModel;
+import com.example.sandeeplamsal123.testapplication2.utils.ContactsUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     Button btnSaveMemo;
     @BindView(R.id.btn_cancel)
     Button btnCancel;
+    @BindView(R.id.txt_user_name)
+    TextView txtUserName;
     @BindView(R.id.txt_phone)
     TextView txtPhone;
     @BindView(R.id.txt_date)
@@ -50,12 +59,20 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver;
     private UserViewModel viewModel;
 
+    private ContactsUtils utils;
+    private static String TAG = MainActivity.class.getSimpleName();
+    private List<ContactModel> utilsList;
+    private String userName;
+    private String userPhone;
+    private HashMap<String, String> contactsMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         broadcastReceiver = new PhoneReceiver();
+
 
         // These flags ensure that the activity can be launched when the screen is locked.
 //                Window window = getWindow();
@@ -66,12 +83,44 @@ public class MainActivity extends AppCompatActivity {
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 +WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 +WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        contactsMap = new HashMap<>();
 
-        Intent intent = getIntent();
-        String phoneNumber = intent.getStringExtra("phoneNumber");
-        txtPhone.setText("The incoming call is = " + phoneNumber);
-        txtDate.setText(getCurrentTimeStamp());
-        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    3);
+        } else {
+            utils = new ContactsUtils(this);
+            utilsList = utils.getContactList();
+
+            ArrayList<HashMap<String, String>> contactNames = new ArrayList<>();
+            for (int i = 0; i < utilsList.size(); i++) {
+                String name = utilsList.get(i).getContactName();
+                String phone = utilsList.get(i).getContactNumber();
+                String formattedPhone = phone.replaceAll("[\\s\\-()]", "");
+                contactsMap.put(formattedPhone, name);
+                contactNames.add(contactsMap);
+            }
+            Log.i("mainUtilList", String.valueOf(contactNames));
+            Intent intent = getIntent();
+            String phoneNumber = intent.getStringExtra("phoneNumber");
+
+            for (int i = 0; i < contactNames.size(); i++) {
+
+                userName = contactNames.get(i).get(phoneNumber);
+            }
+            if (userName != null) {
+                txtUserName.setText(userName);
+            } else {
+                txtUserName.setText("Unknown");
+            }
+
+            txtPhone.setText("The incoming call is = " + phoneNumber);
+            txtDate.setText(getCurrentTimeStamp());
+            viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+        }
+
 
         //registerPhoneReceiver();
     }
@@ -79,11 +128,16 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_save_memo)
     public void saveMemo(View view) {
         repository = new UserRepository(getApplication());
-        String userName = "User " + count++;
         String phoneNumber = getIntent().getStringExtra("phoneNumber");
+
+        if (userName != null) {
+            userName = contactsMap.get(phoneNumber);
+        } else {
+            userName = "Unknown";
+        }
         String userMemo = edtMemo.getText().toString().trim();
-        String userCurrentTime=getCurrentTimeStamp();
-        user = new User(userName, phoneNumber, userMemo,userCurrentTime);
+        String userCurrentTime = getCurrentTimeStamp();
+        user = new User(userName, phoneNumber, userMemo, userCurrentTime);
         viewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
             public void onChanged(@Nullable List<User> users) {
@@ -92,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < users.size(); i++) {
                         userPhoneList.add(users.get(i).getUserPhoneNumber());
                     }
-                    onPhoneArrayReceived(userPhoneList,user);
+                    onPhoneArrayReceived(userPhoneList, user);
 
                 } else {
                     Toast.makeText(MainActivity.this, "Your Memo cannot be Saved...", Toast.LENGTH_LONG).show();
@@ -109,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onPhoneArrayReceived(ArrayList<String> phoneNumbers,User user) {
+    public void onPhoneArrayReceived(ArrayList<String> phoneNumbers, User user) {
         String phoneNumber = getIntent().getStringExtra("phoneNumber");
         if (phoneNumbers.contains(phoneNumber)) {
             repository.update(user);
@@ -144,10 +198,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return yyyy-MM-dd HH:mm:ss formate date as string
      */
-    public static String getCurrentTimeStamp(){
+    public static String getCurrentTimeStamp() {
         try {
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -160,5 +213,4 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
-    //for bitbucket pushing and github...
 }

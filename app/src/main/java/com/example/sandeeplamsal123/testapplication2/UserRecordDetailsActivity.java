@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.sandeeplamsal123.testapplication2.receivers.PhoneReceiver;
 import com.example.sandeeplamsal123.testapplication2.userdatabases.User;
 import com.example.sandeeplamsal123.testapplication2.userdatabases.UserViewModel;
+import com.example.sandeeplamsal123.testapplication2.utils.ContactsUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class UserRecordDetailsActivity extends AppCompatActivity {
     Button btnOk;
 
     private BroadcastReceiver broadcastReceiver;
+    private ContactsUtils utils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

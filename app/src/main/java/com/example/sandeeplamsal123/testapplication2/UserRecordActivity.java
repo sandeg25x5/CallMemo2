@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -18,12 +19,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.sandeeplamsal123.testapplication2.adapters.UserListRecyclerAdapter;
+import com.example.sandeeplamsal123.testapplication2.models.ContactModel;
 import com.example.sandeeplamsal123.testapplication2.userdatabases.User;
 import com.example.sandeeplamsal123.testapplication2.userdatabases.UserDatabase;
 import com.example.sandeeplamsal123.testapplication2.userdatabases.UserRepository;
 import com.example.sandeeplamsal123.testapplication2.userdatabases.UserViewModel;
+import com.example.sandeeplamsal123.testapplication2.utils.ContactsUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -43,16 +47,41 @@ public class UserRecordActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
 
     private static final Integer MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1;
+    private ContactsUtils utils;
+    private static String TAG = UserRecordActivity.class.getSimpleName();
+    private List<ContactModel> utilsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_record);
         ButterKnife.bind(this);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    2);
+        } else {
+            utils = new ContactsUtils(this);
+            utilsList = utils.getContactList();
+            HashMap<String, String> contactsMap = new HashMap<>();
+            ArrayList<HashMap<String, String>> contactNames = new ArrayList<>();
+            for (int i = 0; i < utilsList.size(); i++) {
+                String name = utilsList.get(i).getContactName();
+                String phone = utilsList.get(i).getContactNumber();
+                String formattedPhone=phone.replaceAll("[\\s\\-()]","");
+                contactsMap.put(name, formattedPhone);
+                contactNames.add(contactsMap);
+            }
+            Log.i("utilsList", String.valueOf(contactNames));
+
+        }
+
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_PHONE_STATE},
                     MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+
         } else {
 
             manager = new LinearLayoutManager(UserRecordActivity.this);
@@ -71,7 +100,7 @@ public class UserRecordActivity extends AppCompatActivity {
                     //Update the cached copy of the users in the adapter.
                     if (users != null) {
                         adapter.setUsers(users);
-                        Log.i("UserList",String.valueOf(users.get(0).getUserMemo()));
+                        Log.i("UserList", String.valueOf(users.get(0).getUserMemo()));
                     } else {
                         noRecordTxt.setVisibility(View.VISIBLE);
                         noRecordTxt.setText("NO Records Are Found...");
@@ -87,10 +116,6 @@ public class UserRecordActivity extends AppCompatActivity {
 
     }
 
-
-    public void onPermisssionGranted() {
-
-    }
 
 //    private class populateDatabaseTask extends AsyncTask<Void, Void, List<User>> {
 //        @Override
