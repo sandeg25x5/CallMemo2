@@ -3,13 +3,11 @@ package com.example.sandeeplamsal123.testapplication2;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -48,11 +46,6 @@ public class UserRecordDetailsActivity extends AppCompatActivity {
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 +WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 +WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-//        getWindow().addFlags(
-//                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 
         UserViewModel userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
@@ -75,13 +68,9 @@ public class UserRecordDetailsActivity extends AppCompatActivity {
     }
 
     private void onUserPhoneArrayListReceived(ArrayList<String> phoneNumbers, List<User> users) {
-
-        Log.i("PhoneNums", String.valueOf(phoneNumbers));
-
         String phoneNumber = getIntent().getStringExtra("phoneNumber");
         if (phoneNumbers.contains(phoneNumber)) {
             txtUserRecord.setText("the memo = " + users.get(phoneNumbers.indexOf(phoneNumber)).getUserMemo());
-            Log.i(TAG, users.get(phoneNumbers.indexOf(phoneNumber)).getUserMemo());
         } else {
             txtUserRecord.setText("No Record For this Phone Number is found here at onUserPhoneArrayListReceived...");
         }

@@ -16,8 +16,6 @@ public interface UserDao {
     @Query("SELECT * FROM user_table")
     LiveData<List<User>> getAllUsers();
 
-//    @Query("SELECT * FROM user_table WHERE userId IN (:userIds)")
-//    LiveData<List<User>> loadAllByIds(int[] userIds);
 
     @Query("SELECT * FROM user_table WHERE userName LIKE :first AND "
             + "userPhoneNumber LIKE :number AND " + "userMemo LIKE :memo LIMIT 1")

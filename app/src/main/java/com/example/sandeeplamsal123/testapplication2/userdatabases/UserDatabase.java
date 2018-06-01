@@ -4,8 +4,11 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+
 import android.content.Context;
+
 import android.os.AsyncTask;
+
 import android.support.annotation.NonNull;
 
 @Database(entities = {User.class}, version = 3)
@@ -62,8 +65,8 @@ public abstract class UserDatabase extends RoomDatabase {
         protected Void doInBackground(Void... voids) {
             // Start the app with a clean database every time.
             // Not needed if you only populate on creation.
-           // mDao.deleteUser();
-            User user = new User("Sandeep", "9841055949", "call back him at 4 pm for a meeting...","");
+            // mDao.deleteUser();
+            User user = new User("Sandeep", "9841055949", "call back him at 4 pm for a meeting...", "");
             mDao.insert(user);
             return null;
         }

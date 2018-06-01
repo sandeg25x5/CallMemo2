@@ -1,22 +1,26 @@
 package com.example.sandeeplamsal123.testapplication2;
 
 import android.Manifest;
+
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
+
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
     private UserRepository repository;
     private User user;
-    private int count = 0;
     private BroadcastReceiver broadcastReceiver;
     private UserViewModel viewModel;
 
@@ -63,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     private static String TAG = MainActivity.class.getSimpleName();
     private List<ContactModel> utilsList;
     private String userName;
-    private String userPhone;
     private HashMap<String, String> contactsMap;
 
     @Override
@@ -73,12 +75,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         broadcastReceiver = new PhoneReceiver();
 
-
-        // These flags ensure that the activity can be launched when the screen is locked.
-//                Window window = getWindow();
-//                window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-//                                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-//                                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 +WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
@@ -101,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 contactsMap.put(formattedPhone, name);
                 contactNames.add(contactsMap);
             }
-            Log.i("mainUtilList", String.valueOf(contactNames));
             Intent intent = getIntent();
             String phoneNumber = intent.getStringExtra("phoneNumber");
 
@@ -114,14 +109,10 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 txtUserName.setText("Unknown");
             }
-
             txtPhone.setText("The incoming call is = " + phoneNumber);
             txtDate.setText(getCurrentTimeStamp());
             viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-
         }
-
-
         //registerPhoneReceiver();
     }
 
@@ -147,19 +138,11 @@ public class MainActivity extends AppCompatActivity {
                         userPhoneList.add(users.get(i).getUserPhoneNumber());
                     }
                     onPhoneArrayReceived(userPhoneList, user);
-
                 } else {
                     Toast.makeText(MainActivity.this, "Your Memo cannot be Saved...", Toast.LENGTH_LONG).show();
-
                 }
             }
         });
-
-//        if (repository.getAllUsers().getValue().contains(phoneNumber)) {
-//            repository.update(user);
-//        } else {
-//            repository.insert(user);
-//        }
         finish();
     }
 

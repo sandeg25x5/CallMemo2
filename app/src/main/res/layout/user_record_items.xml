@@ -53,13 +53,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/user_phone_number_txt"
+                android:ellipsize="end"
+                android:maxLines="3"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi molestie nisi dui.  "
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="#ffffff"
-                android:maxLines="3"
-                android:ellipsize="end"/>
+                android:textColor="#ffffff" />
 
             <TextView
                 android:id="@+id/user_current_time_txt"
