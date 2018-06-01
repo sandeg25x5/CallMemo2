@@ -57,4 +57,22 @@ public class UserRepository {
             return null;
         }
     }
+
+    public void delete(String userPhoneNumber) {
+        new DeleteAsyncTask(userDao).execute(userPhoneNumber);
+    }
+
+    private static class DeleteAsyncTask extends AsyncTask<String, Void, Void> {
+        private UserDao userDao;
+
+        public DeleteAsyncTask(UserDao userDao) {
+            this.userDao = userDao;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            userDao.deleteMemo(strings[0]);
+            return null;
+        }
+    }
 }

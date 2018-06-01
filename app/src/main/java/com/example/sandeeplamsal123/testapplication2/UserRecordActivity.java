@@ -77,7 +77,7 @@ public class UserRecordActivity extends AppCompatActivity {
         } else {
             manager = new LinearLayoutManager(UserRecordActivity.this);
             userListRecycler.setLayoutManager(manager);
-            adapter = new UserListRecyclerAdapter(UserRecordActivity.this);
+            adapter = new UserListRecyclerAdapter(UserRecordActivity.this,repository);
             userListRecycler.setAdapter(adapter);
 
             // Get a new or existing ViewModel from the ViewModelProvider.

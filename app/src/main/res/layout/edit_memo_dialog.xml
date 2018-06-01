@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <EditText
+            android:id="@+id/edt_edit_memo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="Your Editable Memo is Here..."
+            android:maxLines="3"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:scrollbarAlwaysDrawHorizontalTrack="true" />
+
+        <Button
+            android:id="@+id/btn_edit_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edt_edit_memo"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:background="@color/colorAccent"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp"
+            android:paddingStart="4dp"
+            android:text="Edit"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/btn_cancel_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edt_edit_memo"
+            android:layout_marginEnd="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_toRightOf="@+id/btn_edit_memo"
+            android:background="@color/colorAccent"
+            android:paddingEnd="4dp"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
+            android:text="cancel"
+            android:textColor="#ffffff" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

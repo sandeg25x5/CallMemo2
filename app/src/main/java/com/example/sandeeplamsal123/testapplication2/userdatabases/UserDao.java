@@ -34,4 +34,7 @@ public interface UserDao {
     @Update
     void updateUser(User user);
 
+    @Query("DELETE FROM user_table WHERE userPhoneNumber LIKE :userPhoneNumber")
+    void deleteMemo(String userPhoneNumber);
+
 }
