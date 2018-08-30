@@ -7,19 +7,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
-import android.os.Handler;
-
 import android.support.v4.content.ContextCompat;
 
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
-import com.example.sandeeplamsal123.testapplication2.MainActivity;
-import com.example.sandeeplamsal123.testapplication2.UserRecordDetailsActivity;
-
+import com.example.sandeeplamsal123.testapplication2.services.PhoneService;
 
 
 public class PhoneReceiver extends BroadcastReceiver {
+
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -29,28 +26,22 @@ public class PhoneReceiver extends BroadcastReceiver {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(context, "Permission is not granted ", Toast.LENGTH_SHORT).show();
             } else {
-                final String phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(context, " Receiver start ", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(context, UserRecordDetailsActivity.class);
-                        intent.putExtra("phoneNumber", phoneNumber);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    }
-                }, 2000);
+
+               context.startService(new Intent(context, PhoneService.class));
+
             }
         } else {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(context, "Permission is not granted ", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, " Receiver started ", Toast.LENGTH_SHORT).show();
-                String phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
-                intent = new Intent(context, MainActivity.class);
-                intent.putExtra("phoneNumber", phoneNumber);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+//                String phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+//                intent = new Intent(context, MainActivity.class);
+//                intent.putExtra("phoneNumber", phoneNumber);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(intent);
+                context.stopService(new Intent(context,PhoneService.class));
+
             }
         }
     }

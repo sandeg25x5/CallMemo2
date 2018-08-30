@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecycl
     public UserListRecyclerAdapter(Context context, UserRepository repository) {
         this.context = context;
         this.repository = repository;
+       // Log.e("test","Hello datas"+repository.getAllUsers().getValue().size());
         inflater = LayoutInflater.from(context);
 
     }

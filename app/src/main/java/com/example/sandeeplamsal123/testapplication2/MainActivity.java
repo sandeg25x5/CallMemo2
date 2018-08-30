@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
@@ -43,6 +46,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+
+
 
     @BindView(R.id.edt_memo)
     TextInputEditText edtMemo;
@@ -196,4 +201,6 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
+
 }
